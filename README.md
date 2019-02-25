@@ -46,3 +46,30 @@ A react project for learning purpose, taught by Stephen Grider's online course.
    ```
 
    *Note: The Link element overwrites the anchor tag and prevents the browser from making new request, but just show/hide different components instead. This is called Single Page App (SPA) which makes use of a single index.html document only.*
+
+### Component Scaffolding
+
+The general plan is to create the following structure:
+
+| Path            | Component    |
+| --------------- | ------------ |
+| /               | StreamList   |
+| /streams/new    | StreamCreate |
+| /streams/edit   | StreamEdit   |
+| /streams/delete | StreamDelete |
+| /streams/show   | StreamShow   |
+
+1. Create a new directory *streams* inside `src/components/`.
+
+2. Inside *streams*, create *StreamList.js*, *StreamCreate.js*, *StreamEdit.js*, *StreamDelete.js*, *StreamShow.js*.
+
+3. Inside each component files, create a boilerplate to show some text on the screen.
+
+4. Inside *App*, delete *PageOne* and *PageTwo* (no longer needed) and import the five new components.
+
+5. Finally, setup the five routes with proper paths inside
+
+   ```jsx
+   <BrowserRouter>...</BrowserRouter>
+   ```
+
