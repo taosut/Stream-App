@@ -79,6 +79,6 @@ The general plan is to create the following structure:
 2. Create *Header.js* inside 'components' directory.
 3. Style the *Header* component to be ``className = "ui secondary pointing menu"``.
 4. Import *Link* from *react-router-dom* library. 
-5. Create button inside the header to navigate back to root path with <Link>.
-6. Back to App.js, add a class name called 'ui container' to the <div> above <BrowserRouter>.
-7. Import *Header* component and invoke it inside <BrowserRouter> on the very top.
+5. Create button inside the header to navigate back to root path with ``<Link>``.
+6. Back to App.js, add a class name called 'ui container' to the ``<div>`` above ``<BrowserRouter>``.
+7. Import *Header* component and invoke it inside ``<BrowserRouter>`` on the very top.
