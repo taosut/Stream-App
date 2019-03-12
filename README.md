@@ -4,7 +4,7 @@ A react project for learning purpose, taught by Stephen Grider's online course.
 
 
 
-## Project Timeline
+## Project Timeline / Notes
 
 ### Initial Setup
 
@@ -82,3 +82,16 @@ The general plan is to create the following structure:
 5. Create button inside the header to navigate back to root path with ``<Link>``.
 6. Back to App.js, add a class name called 'ui container' to the ``<div>`` above ``<BrowserRouter>``.
 7. Import *Header* component and invoke it inside ``<BrowserRouter>`` on the very top.
+
+# User Authentication
+
+1. Create new project in Google API, and obtain the Client ID.
+2. Add the Google API library to index.html ``<script src="https://apis.google.com/js/api.js"></script>``. Should now be able to type ``gapi`` in chrome console.
+3. Create new component *GoogleAuth.js* with boilerplate.
+4. Import this component inside *Header.js*.
+5. Call the *GoogleAuth* component under 'right menu'.
+
+*Notes: 'gapi' is a multi-purpose google api library. We are using this to interact from google oauth flow. The library is very large, therefore whenever we want to use it, we only load up the specific internal library that we want to use. Example: ``gapi.load('client:auth2')``. Now we have additional functions to use. We can then initialize this library with our Client ID by calling ``gapi.client.init({clientId: 'clientidhere'})``.*
+
+6. Now, we do this in javascript. Inside GoogleAuth.js call ``window.gapi.load('client:auth2')`` inside ``componentDidMount()``.
+7. Now, whenever GoogleAuth is loaded, it will make a call to retrieve this additional library from google api. We need to create a callback to know when this process is complete. Simply add a callback function as the second argument and initialize our client id as mentioned above. And set ``scope: 'email'`` as we only want to get permission to access user's email.
