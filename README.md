@@ -86,12 +86,41 @@ The general plan is to create the following structure:
 # User Authentication
 
 1. Create new project in Google API, and obtain the Client ID.
+
 2. Add the Google API library to index.html ``<script src="https://apis.google.com/js/api.js"></script>``. Should now be able to type ``gapi`` in chrome console.
+
 3. Create new component *GoogleAuth.js* with boilerplate.
+
 4. Import this component inside *Header.js*.
+
 5. Call the *GoogleAuth* component under 'right menu'.
 
-*Notes: 'gapi' is a multi-purpose google api library. We are using this to interact from google oauth flow. The library is very large, therefore whenever we want to use it, we only load up the specific internal library that we want to use. Example: ``gapi.load('client:auth2')``. Now we have additional functions to use. We can then initialize this library with our Client ID by calling ``gapi.client.init({clientId: 'clientidhere'})``.*
+   *Notes: 'gapi' is a multi-purpose google api library. We are using this to interact from google oauth flow. The library is very large, therefore whenever we want to use it, we only load up the specific internal library that we want to use. Example: ``gapi.load('client:auth2')``. Now we have additional functions to use. We can then initialize this library with our Client ID by calling ``gapi.client.init({clientId: 'clientidhere'})``.*
 
 6. Now, we do this in javascript. Inside GoogleAuth.js call ``window.gapi.load('client:auth2')`` inside ``componentDidMount()``.
+
 7. Now, whenever GoogleAuth is loaded, it will make a call to retrieve this additional library from google api. We need to create a callback to know when this process is complete. Simply add a callback function as the second argument and initialize our client id as mentioned above. And set ``scope: 'email'`` as we only want to get permission to access user's email.
+
+   *Note: For documentation, reference ``https://developers.google.com/api-client-library/javascript/reference/referencedocs#authentication``. In the console, try*
+
+   ```javascript
+   const auth = gapi.auth2.getAuthInstance();
+   ```
+
+   *This method returns a GoogleAuth object which contains methods that allows us to check if a user is signed in and so on. Try*
+
+   ```javascript
+   auth.signIn()
+   ```
+
+   *This will invoke a popup for user to choose their google account to sign in. Now,*
+
+   ```javascript
+   auth.isSignedIn.get() // returns true
+   ```
+
+8. Chain the `window.gapi.client.init({...})` with `.then(() => {...})` to retrieve GoogleAuth object after gapi is successfully initialized with client ID. Then, create a state variable `state = { isSignedIn: null }`, and update this variable with `this.setState({ isSignedIn: this.auth.isSignedIn.get() })` inside componentDidMount() method.
+
+9. Create a helper method `renderAuthButton()` to check the user signed-in state and display the appropriate text message. Invoke this method inside `render()`.
+
+   *Note: test the code out in console by logging in and logging out via calling `gapi.auth2.getAuthInstance().signIn()` and etc.*
