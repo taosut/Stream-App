@@ -31,16 +31,22 @@ class GoogleAuth extends React.Component {
   // Helper method to check user signed-in state.
   renderAuthButton() {
     if (this.state.isSignedIn === null) {
-      return (
-        <div>I don't know if we are signed in.</div>
-      );
+      return null;
     } else if (this.state.isSignedIn === true) {
       return (
-        <div>I am signed in.</div>
+        // <div>I am signed in.</div>
+        <button className="ui google red button">
+          <i className="google icon"></i>
+          Sign Out
+        </button>
       );
     } else {
       return (
-        <div>I am not signed in.</div>
+        // <div>I am not signed in.</div>
+        <button className="ui button red google">
+        <i className="google icon"></i>
+        Sign In with Google
+        </button>
       );
     }
   }

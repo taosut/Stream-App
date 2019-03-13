@@ -124,3 +124,6 @@ The general plan is to create the following structure:
 9. Create a helper method `renderAuthButton()` to check the user signed-in state and display the appropriate text message. Invoke this method inside `render()`.
 
    *Note: test the code out in console by logging in and logging out via calling `gapi.auth2.getAuthInstance().signIn()` and etc.*
+
+10. Added `listen(this.onAuthChange)` to update the state variable 'isSignedIn' whenever the user signs in or signs out.
+11. Instead of showing status message, change the renderAuthButton() method to display appropriate buttons instead.
