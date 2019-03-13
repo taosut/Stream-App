@@ -13,9 +13,19 @@ class GoogleAuth extends React.Component {
       }).then(() => {
         // Executed after gapi is successfully initialized.
         this.auth = window.gapi.auth2.getAuthInstance();
+
+        // Get initial status when we first intialize the gapi library.
         this.setState({ isSignedIn: this.auth.isSignedIn.get() });
+
+        // Whenever the user's sign-in status is changed, listen calls
+        // onAuthChange() and updates the state variable 'isSignedIn'.
+        this.auth.isSignedIn.listen(this.onAuthChange);
       });
     });
+  }
+
+  onAuthChange = () => {
+    this.setState({ isSignedIn: this.auth.isSignedIn.get() });
   }
 
   // Helper method to check user signed-in state.
