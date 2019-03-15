@@ -218,3 +218,8 @@ The general plan is to create the following structure:
 17. Check if user is currently logged in. Call the appropriate action creator to update the value of 'isSignedIn' in the authReducer.
 18. Pass `mapStateToProps` as the first argument inside `connect(first arg, {...})`.
 19. Update `renderAuthButton()` by changing the keywords `this.state` to `this.props`.
+20. Refactor the action.type to constant variable instead of strings to avoid unnoticed spelling errors.
+
+*Note: To get user ID use the command line in console `gapi.auth2.getAuthInstance().currentUser.get().getId()`. We want to store this ID inside our authReducer. So in the future, we know which user created which streams.*
+
+21. Pass the user Id into signIn action-creator as an argument and return it as a payload. Inside the authReducer, create a new key inside of the state object called userId with default value of null. If action.type is SIGN_IN then set userId to be action.payload else set to null.
