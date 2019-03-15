@@ -142,7 +142,7 @@ The general plan is to create the following structure:
 
     ```javascript
     import { combineReducers } from 'redux';
-
+    
     export default combineReducers({
         // Dummy
         replaceMe: () => 'asdf'
@@ -187,15 +187,34 @@ The general plan is to create the following structure:
 
 11. Modify `onAuthChange()` to the following:
 
-    ```javascript
-    onAuthChange = (isSignedIn) => {
-        if (isSignedIn) {
-            this.props.signIn();
-        } else {
-            this.props.signOut();
-        }
-    }
-    ```
+     ```javascript
+     onAuthChange = (isSignedIn) => {
+         if (isSignedIn) {
+             this.props.signIn();
+         } else {
+             this.props.signOut();
+         }
+     }
+     ```
 
 12. Create file `src/reducers/authReducer.js`. Create a reducer contains a state object with a key called 'isSignedIn' with default value of *null*. Then create a switch statement on 'action.type'. Use the javascript ... notation to return new object with updated value for 'isSignedIn'.
+
 13. Open `src/reducers/index.js`. Import authReducer and incorporate it inside combineReducers({...}).
+
+14. Open `src/component/GoogleAuth.js`. Create method `mapStateToProps` that returns the object
+
+     ```javascript
+     // Note:
+     // * isSignedIn will be the props.
+     // * state is from the parameter
+     // * auth is the reducer name
+     // * isSignedIn is the item inside of auth.
+     return { isSignedIn: state.auth.isSignedIn }
+     ```
+
+
+15. Remove the previous state object from the class.
+16. Remove the `this.setState({...}) ` statement.
+17. Check if user is currently logged in. Call the appropriate action creator to update the value of 'isSignedIn' in the authReducer.
+18. Pass `mapStateToProps` as the first argument inside `connect(first arg, {...})`.
+19. Update `renderAuthButton()` by changing the keywords `this.state` to `this.props`.
