@@ -1,4 +1,9 @@
+// External Imports
 import React from 'react';
+import { connect } from 'react-redux';
+
+// Internal Imports
+import { signIn, signOut } from '../actions';
 
 class GoogleAuth extends React.Component {
   // isSignedIn initialized to 'null' because we don't know if user is signed in or not.
@@ -26,8 +31,14 @@ class GoogleAuth extends React.Component {
     });
   }
 
-  onAuthChange = () => {
-    this.setState({ isSignedIn: this.auth.isSignedIn.get() });
+  onAuthChange = (isSignedIn) => {
+    // Call the appropriate action creator.
+    if (isSignedIn) {
+      this.props.signIn();
+    } else {
+      this.props.signOut();
+    }
+    // this.setState({ isSignedIn: this.auth.isSignedIn.get() });
   }
 
   onSignInClick = () => {
@@ -70,4 +81,6 @@ class GoogleAuth extends React.Component {
   }
 };
 
-export default GoogleAuth;
+// The first argument of maps all reducers as props of this class.
+// The second argument maps all the action-creators as props of this class.
+export default connect(null, { signIn: signIn, signOut: signOut })(GoogleAuth);

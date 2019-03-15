@@ -168,5 +168,31 @@ The general plan is to create the following structure:
    );
    ```
 
-   
+8. Inside `actions/index.js` create two action creators `signIn()` and `signOut()` which will be called by onAuthChange() whenever a user has been successfully signed in or signed out. These action creators will return an object with type `SIGN_IN` and `SIGN_OUT` respectively, leaving out the payload attribute.
 
+9. Now we want to hook these action creators up inside the GoogleAuth component. Inside `src/components/GoogleAuth.js` import the following:
+
+   ```javascript
+   import { connect } from 'react-redux';
+   import { signIn, signOut } from '../actions'
+   ```
+
+10. At the bottom, modify the return statement to the following:
+
+    ```javascript
+    // Using dummy value since we don't yet have mapStateToProps().
+    // Note: signIn() and signOut() actions are now props of this class.
+    export default connect(null, { signIn, signOut })(GoogleAuth);
+    ```
+
+11. Modify `onAuthChange()` to the following:
+
+    ```javascript
+    onAuthChange = (isSignedIn) => {
+        if (isSignedIn) {
+            this.props.signIn();
+        } else {
+            this.props.signOut();
+        }
+    }
+    ```
