@@ -196,3 +196,6 @@ The general plan is to create the following structure:
         }
     }
     ```
+
+12. Create file `src/reducers/authReducer.js`. Create a reducer contains a state object with a key called 'isSignedIn' with default value of *null*. Then create a switch statement on 'action.type'. Use the javascript ... notation to return new object with updated value for 'isSignedIn'.
+13. Open `src/reducers/index.js`. Import authReducer and incorporate it inside combineReducers({...}).

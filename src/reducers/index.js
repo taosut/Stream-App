@@ -1,5 +1,9 @@
+// External Imports
 import { combineReducers } from 'redux';
 
+// Internal Imports
+import authReducer from './authReducer';
+
 export default combineReducers({
-  replaceMe: () => '123123'
+  auth: authReducer
 });
