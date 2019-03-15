@@ -126,4 +126,7 @@ The general plan is to create the following structure:
    *Note: test the code out in console by logging in and logging out via calling `gapi.auth2.getAuthInstance().signIn()` and etc.*
 
 10. Added `listen(this.onAuthChange)` to update the state variable 'isSignedIn' whenever the user signs in or signs out.
+
 11. Instead of showing status message, change the renderAuthButton() method to display appropriate buttons instead.
+
+12. Create click event handlers for the login and logout buttons. Create two methods call `onSignIn()` and `onSignOut()` where their definition invokes the google api to sign-in or sign-out. These methods are used in the ``onClick`` property of the buttons. Reminder to not include the parenthesis (example: `onClick="onSignIn"`) to avoid invoking this method upon loading on the screen.
