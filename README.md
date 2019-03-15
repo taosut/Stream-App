@@ -83,7 +83,7 @@ The general plan is to create the following structure:
 6. Back to App.js, add a class name called 'ui container' to the ``<div>`` above ``<BrowserRouter>``.
 7. Import *Header* component and invoke it inside ``<BrowserRouter>`` on the very top.
 
-# User Authentication
+### User Authentication
 
 1. Create new project in Google API, and obtain the Client ID.
 
@@ -129,4 +129,44 @@ The general plan is to create the following structure:
 
 11. Instead of showing status message, change the renderAuthButton() method to display appropriate buttons instead.
 
-12. Create click event handlers for the login and logout buttons. Create two methods call `onSignIn()` and `onSignOut()` where their definition invokes the google api to sign-in or sign-out. These methods are used in the ``onClick`` property of the buttons. Reminder to not include the parenthesis (example: `onClick="onSignIn"`) to avoid invoking this method upon loading on the screen.
+12. Create click event handlers for the login and logout buttons. Create two methods call `onSignInClick()` and `onSignOutClick()` where their definition invokes the google api to sign-in or sign-out. These methods are used in the ``onClick`` property of the buttons. Reminder to not include the parenthesis (example: `onClick="onSignInClick"`) to avoid invoking this method upon loading on the screen.
+
+### Redux Refactor
+
+1. Install dependencies `npm install --save redux react-redux`.
+2. Create directory `src/actions`.
+3. Create file `src/actions/index.js`. (Action creators goes in here.)
+4. Create directory `src/reducers`.
+5. Create file `src/reducers/index.js`.
+6. Inside `reducers/index.js` create boilerplate.
+
+    ```javascript
+    import { combineReducers } from 'redux';
+
+    export default combineReducers({
+        // Dummy
+        replaceMe: () => 'asdf'
+    });
+    ```
+
+7. Inside `src/index.js` add the following lines,
+
+   ```javascript
+   import { Provider } from 'react-redux';
+   import { createStore } from 'redux';
+   import reducers from './reducers'
+   ```
+
+   ```javascript
+   const store = createStore(reducers)
+   ```
+
+   ```jsx
+   ReactDOM.render(
+   	<Provider store={store}><App /></Provider>,
+       document.querySelector('#root')
+   );
+   ```
+
+   
+

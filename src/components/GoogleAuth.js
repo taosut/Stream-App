@@ -2,6 +2,8 @@ import React from 'react';
 
 class GoogleAuth extends React.Component {
   // isSignedIn initialized to 'null' because we don't know if user is signed in or not.
+  // However, this state variable is not convienient for other components to access.
+  // We want to centralize this variable with redux for the sake of future implementations.
   state = { isSignedIn: null };
 
   componentDidMount() {
@@ -28,22 +30,24 @@ class GoogleAuth extends React.Component {
     this.setState({ isSignedIn: this.auth.isSignedIn.get() });
   }
 
-  onSignIn = () => {
+  onSignInClick = () => {
     this.auth.signIn();
   }
 
-  onSignOut = () => {
+  onSignOutClick = () => {
     this.auth.signOut();
+    this.auth.disconnect();
   }
 
   // Helper method to check user signed-in state.
+  // Invoked by render() everytime 'isSignedIn' value is changed.
   renderAuthButton() {
     if (this.state.isSignedIn === null) {
       return null;
     } else if (this.state.isSignedIn === true) {
       return (
         // <div>I am signed in.</div>
-        <button onClick={ this.onSignOut } className="ui google red button">
+        <button onClick={ this.onSignOutClick } className="ui google red button">
           <i className="google icon"></i>
           Sign Out
         </button>
@@ -51,7 +55,7 @@ class GoogleAuth extends React.Component {
     } else {
       return (
         // <div>I am not signed in.</div>
-        <button onClick={ this.onSignIn } className="ui button red google">
+        <button onClick={ this.onSignInClick } className="ui button red google">
         <i className="google icon"></i>
         Sign In with Google
         </button>
