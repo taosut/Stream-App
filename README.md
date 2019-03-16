@@ -224,7 +224,7 @@ The general plan is to create the following structure:
 
 21. Pass the user Id into signIn action-creator as an argument and return it as a payload. Inside the authReducer, create a new key inside of the state object called userId with default value of null. If action.type is SIGN_IN then set userId to be action.payload else set to null.
 
-### Redux Dev Tools
+### Redux DevTools
 
 1. Install Redux DevTools chrome extension.
 
@@ -243,3 +243,20 @@ The general plan is to create the following structure:
 
 4. Now, the chrome tab of this project will light up the Redux DevTools icon. The state tab shows the current state inside the redux store. The left panel shows the history of action creators invoked and allow us to jump back in time.
 5. Debug Session allows Redux DevTools to save the redux store changes between refreshes by `localhost:3000?debug_session=<some_string>`.
+
+### Redux Form
+
+1. Install redux-form to project `npm install redux-form`.
+
+2. Open file `src/reducers/index.js`. The redux-form already created a reducer for us from the library. Pull this reducer out of the library and hook it up to combineReducers.
+
+   ```javascript
+   import { reducer as formReducer } from 'redux-form';
+   
+   // 'form' is a keyword.
+   export default combineReducers({ form: formReducer });
+   ```
+
+   Note: Inside of Redux DevTools, we now see a new reducer called 'form' inside `State > Tree`.
+
+3. 

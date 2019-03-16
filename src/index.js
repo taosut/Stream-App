@@ -8,6 +8,7 @@ import { createStore, applyMiddleware, compose } from 'redux';
 import App from './components/App.js';
 import reducers from './reducers';
 
+// Setup for Redux DevTools
 const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
 const store = createStore(
   reducers,
