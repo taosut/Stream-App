@@ -242,3 +242,4 @@ The general plan is to create the following structure:
    ```
 
 4. Now, the chrome tab of this project will light up the Redux DevTools icon. The state tab shows the current state inside the redux store. The left panel shows the history of action creators invoked and allow us to jump back in time.
+5. Debug Session allows Redux DevTools to save the redux store changes between refreshes by `localhost:3000?debug_session=<some_string>`.
