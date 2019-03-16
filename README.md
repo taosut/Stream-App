@@ -315,3 +315,21 @@ The general plan is to create the following structure:
 
 
 9. To format the fields and labels, add `className="ui form"` in the parent `<form>` of the two Field's.
+
+10. Now to handle form submission. Create onSubmit() helper function.
+
+    ```javascript
+    onSubmit(formValues) {
+        // formValues contains values from our fields, including blank submission.
+    }
+    ```
+
+11. Add an `onSubmit` property to the `<form>` element.
+
+    ```jsx
+    <form className="ui form" onSubmit={this.props.handleSubmit(this.onSubmit)}>
+    	...
+    </form>
+    ```
+
+    
