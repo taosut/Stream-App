@@ -223,3 +223,22 @@ The general plan is to create the following structure:
 *Note: To get user ID use the command line in console `gapi.auth2.getAuthInstance().currentUser.get().getId()`. We want to store this ID inside our authReducer. So in the future, we know which user created which streams.*
 
 21. Pass the user Id into signIn action-creator as an argument and return it as a payload. Inside the authReducer, create a new key inside of the state object called userId with default value of null. If action.type is SIGN_IN then set userId to be action.payload else set to null.
+
+### Redux Dev Tools
+
+1. Install Redux DevTools chrome extension.
+
+2. Open `src/index.js`. Import `applyMiddleware` and `compose` from react library.
+
+3. Create a const variable. `const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;`.
+
+4. Pass this variable as the second argument inside `createStore(store, second-arg)`.
+
+   ```javascript
+   const store = createStore(
+     reducers,
+     composeEnhancers(applyMiddleware())
+   );
+   ```
+
+4. Now, the chrome tab of this project will light up the Redux DevTools icon. The state tab shows the current state inside the redux store. The left panel shows the history of action creators invoked and allow us to jump back in time.
