@@ -259,4 +259,31 @@ The general plan is to create the following structure:
 
    Note: Inside of Redux DevTools, we now see a new reducer called 'form' inside `State > Tree`.
 
-3. 
+3. Open file `src/components/streams/StreamCreate.js`. Refactor this functional-based component to a class-based component, because we want to later create helper methods.
+
+4. Import two modules from redux-form `import { Field, reduxForm } from 'redux-form'`. From the naming conventions, we can tell that 'Field' is a react component, and 'reduxForm' is a function which has the same functionality as the 'connect()' function that we have used previously. It makes sure that we can call some action-creators and get some form data into out component (automatically).
+
+5. Connect reduxForm() to StreamCreate(). Unlike connect(), reduxForm() takes a single object with configurations.
+
+   ```javascript
+   export default reduxForm({ form: 'streamCreate' })(StreamCreate);
+   ```
+
+   Now, this component has a bunch of props.
+
+6. Add a form with two fields for the purpose of inputting the name and description of the stream.
+
+   ```javascript
+   <form>
+     <Field name="title" component={this.renderInput} />
+     <Field name="description" component={this.renderInput} />
+   </form>
+   ```
+
+   ```javascript
+   // formProps is an object from redux-form Field.
+   renderInput(formProps) {
+     return <input onChange={formProps.input.onChange} value={formProps.input.value} />;
+   }
+   ```
+
