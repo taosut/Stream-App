@@ -280,10 +280,38 @@ The general plan is to create the following structure:
    </form>
    ```
 
-   ```javascript
+   ```jsx
    // formProps is an object from redux-form Field.
    renderInput(formProps) {
      return <input onChange={formProps.input.onChange} value={formProps.input.value} />;
    }
    ```
 
+7. Refactor the syntax
+
+   ```jsx
+   renderInput({ input }) {
+       return (
+       	<input {...input} />
+       );
+   }
+   ```
+
+8. Add labels to both fields
+
+   ```jsx
+   // redux-form doesn't recognize 'label' so it will pass it as a key and value
+   // inside 'formProps' as a key and value.
+   <Field component={renderInput} name="title" label="Enter Title" />
+   <Field component={renderInput} name="description" label="Enter Description" />
+   
+   renderInput({ input, label }) {
+       return (
+           <label>{label}</label>
+       	<input {...input} />
+       );
+   }
+   ```
+
+
+9. To format the fields and labels, add `className="ui form"` in the parent `<form>` of the two Field's.
