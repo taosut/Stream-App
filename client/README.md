@@ -375,4 +375,19 @@ The general plan is to create the following structure:
     </div>
     ```
 
-    
+### RESTful Setup
+
+1. Download package `npmjs.com/package/json-server`.
+
+2. RESTful Conventions
+
+   | Action                    | Method | Route        |
+   | ------------------------- | ------ | ------------ |
+   | List of all records       | GET    | /streams     |
+   | Get one particular record | GET    | /streams/:id |
+   | Create record             | POST   | /streams     |
+   | Update a record           | PUT    | /streams/:id |
+   | Delete a record           | DELETE | /streams/:id |
+
+   
+
