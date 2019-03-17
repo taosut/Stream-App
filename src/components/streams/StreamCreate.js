@@ -2,18 +2,33 @@ import React from 'react';
 import { Field, reduxForm } from 'redux-form';
 
 class StreamCreate extends React.Component {
-  renderInput(/*formProps*/ { input, label, meta }) {
+  // We only care about meta.error and meta.touch
+  renderError({ error, touched }) {
+    if (touched && error) {
+      return (
+        // Note that ui semantic by default hides error messages.
+        <div className="ui error message">
+          <div className="header">
+            {error}
+          </div>
+        </div>
+      );
+    }
+  }
+
+  renderInput = (/*formProps*/ { input, label, meta }) => {
     // formProps is an object returned from redux-form Field.
     // return <input onChange={formProps.input.onChange} value={formProps.input.value} />;
 
     // This ... syntax takes the formProps.input properties (object) and add them as properties
     // to the input element.
-    
+    const fieldClassName = `field ${meta.touched && meta.error ? 'error' : ''}`;
+
     return (
-      <div className="field">
+      <div className={fieldClassName}>
         <label>{label}</label>
-        <input {.../*formProps.input*/input} />
-        <div>{meta.error}</div>
+        <input {.../*formProps.input*/input} autoComplete="off" />
+        {this.renderError(meta)}
       </div>
     );
   }
@@ -25,7 +40,7 @@ class StreamCreate extends React.Component {
 
   render() {
     return (
-      <form className="ui form" onSubmit={this.props.handleSubmit(this.onSubmit)}>
+      <form className="ui form error" onSubmit={this.props.handleSubmit(this.onSubmit)}>
         <Field name="title" component={this.renderInput} label="Enter Title" />
         <Field name="description" component={this.renderInput} label="Enter Description" />
         <button className="ui button primary">Submit</button>

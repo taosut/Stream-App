@@ -344,3 +344,35 @@ The general plan is to create the following structure:
     ```
 
 14. Inside `renderInput()`, destructure one additional property 'meta'. This property contains the error message. Inside `renderInput()`, print `meta.error` under the `<input>`.
+
+15. We can optionally turn auto-complete feature off.
+
+    ```jsx
+    <input autoComplete='off' />
+    ```
+
+16. When user deselects the field, we want to display error messages (if there are any). Create a helper method `renderError` to do this, since we want to properly format the messages with *classNames* as well.
+
+    ```javascript
+    renderError({ error, touched }) {
+        if (error && touched ) {
+            ...
+        }
+    }
+    ```
+
+    Note: Turn `renderInput()` into an arrow function to fix context error.
+
+17. However, semantic-ui by default hides error messages. Inside `<form>` just add a `className`  called 'ui error'.
+
+18. Additionally, adding `className="error"` parent `<div className="field">` of `<input>` will make the input field highlighted in red by default. But, we only want to add this className if there's an error AND if user deselects the field.
+
+    ```jsx
+    const className = `field ${meta.error && meta.touched ? 'error' : ''}`;
+    
+    <div className={className}>
+    ...
+    </div>
+    ```
+
+    
