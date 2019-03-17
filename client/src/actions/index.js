@@ -6,6 +6,7 @@
 // The reducer can access action.type and action.payload.
 
 import { SIGN_IN, SIGN_OUT } from './types';
+import streams from '../apis/streams';
 
 export const signIn = (userId) => {
   return {
@@ -19,3 +20,13 @@ export const signOut = () => {
     type: SIGN_OUT
   };
 };
+
+export const createStream = (formValues) => {
+  // Create async action-creator; use redux-thunk.
+  // Return an arrow function from our action-creator.
+  return async (dispatch) => {
+    // POST request with axios.
+    // Passing in all the formValues. (example: title, description)
+    streams.post('/streams', formValues);
+  }
+}

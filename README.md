@@ -377,7 +377,7 @@ The general plan is to create the following structure:
 
 ### RESTful Setup
 
-1. Download package `npmjs.com/package/json-server`.
+1. Reference documentation `npmjs.com/package/json-server`.
 
 2. RESTful Conventions
 
@@ -389,5 +389,91 @@ The general plan is to create the following structure:
    | Update a record           | PUT    | /streams/:id |
    | Delete a record           | DELETE | /streams/:id |
 
-   
+3. Store the previous react project in a directory called 'client'. Now create a new directory call 'api'. Inside this folder, run `npm init` and press 'enter' all the way through.
 
+4. Install the json-server: `npm install --save json-server`.
+
+5. Open up 'api' directory in code editor. Create a new file called `db.json`.
+
+   ```json
+   {
+     "streams": []
+   }
+   ```
+
+6. Open file `api/package.json` and delete the line `"test": "echo \"Error: no test specified\" && exit 1"`. Replace it with `"start": "json-server -p 3001 -w db.json"`. This tells the script to start json-server with port 3001 and watch the db.json file for any changes that gets made to it.
+
+7. Now in the terminal within the 'api' directory, run `npm start`. Notice under **Resources**, we have `http://localhost:3001/streams`, thus we can make use of this json-server to manipulate the list of streams that are stored inside the api server by following all of the RESTful conventions. (For example, if we want to get the list of all streams, we make a GET request to `http://localhost:3001/streams`, and etc.)
+
+   Note: We are now running on two terminal windows; one for the react-app and the other for json-server.
+
+   **Plan:** Every time when our user submits a form from the 'StreamCreate' component, we want to make an AJAX request or a network request to our api running at localhost 3001. To make a network request, we first define an action-creator, then wire-up the action-creator to our component via connect(). The action-creator will be called by `onSubmit()`. The action-creator is going to use 'axios' to make network request to our api.
+
+8. Install axios and redux-thunk inside client directory: `npm install --save axios redux-thunk`.
+
+9. Create new directory `client/src/apis`.
+
+10. Create new file `client/src/apis/streams.js`.
+
+    ```javascript
+    import axios from 'axios';
+    
+    export default axios.create({
+        // Locate baseURL from json-server terminal under 'Home'.
+        baseURL: 'http://localhost:3001'
+    });
+    ```
+
+11. Open file `client/actions/index.js`. Import 'streams' axios instance we just created.
+
+    ```javascript
+    import streams from '../apis/streams'
+    ```
+
+    Create an action-creator to handle making network request.
+
+    ```javascript
+    export const createStream = (formValues) => {
+      // Create async action-creator; use redux-thunk.
+      // Return an arrow function from our action-creator.
+      return async (dispatch) => {
+        // POST request with axios.
+        // Passing in all the formValues. (example: title, description)
+        streams.post('/streams', formValues);
+      }
+    }
+    ```
+
+12. Open file `client/src/components/streams/StreamCreate`. Hook up the action-creator we just created to StreamCreate component.
+
+    ```javascript
+    import { connect } from 'react-redux';
+    import { createStream } from '../../actions';
+    
+    ...
+    
+    /*export default*/ const formWrapped = reduxForm({
+      // 'streamCreate' is similar to a state object.
+      form: 'streamCreate',
+      validate: validate
+    })(StreamCreate);
+    
+    export default connect(null, { createStream: createStream })(formWrapped);
+    ```
+
+13. Finally to wire-up 'Redux Thunk', open up `client/src/index.js`.
+
+    ```javascript
+    import reduxThunk from 'reduxThunk';
+    ```
+
+    Pass it in as an argument to 'applyMiddleware()'.
+
+    ```javascript
+    const store = createStore(
+      reducers,
+      composeEnhancers(applyMiddleware(reduxThunk))
+    );
+    ```
+
+14. Test the action-creator out by going to `localhost:3000/streams/new` and submit form. Check `Network > XHR` tab in chrome. If there's a POST request and status is 201, then it means it worked.

@@ -1,5 +1,10 @@
+// External Imports
 import React from 'react';
 import { Field, reduxForm } from 'redux-form';
+import { connect } from 'react-redux';
+
+// Internal Imports
+import { createStream } from '../../actions';
 
 class StreamCreate extends React.Component {
   // We only care about meta.error and meta.touch
@@ -33,9 +38,11 @@ class StreamCreate extends React.Component {
     );
   }
 
-  onSubmit(formValues) {
+  onSubmit = (formValues) => {
     // formValues contains the value of the two fields.
-    console.log(formValues);
+    // console.log(formValues);
+
+    this.props.createStream(formValues);
   }
 
   render() {
@@ -70,8 +77,10 @@ const validate = (formValues) => {
   return errors;
 };
 
-export default reduxForm({
+/*export default*/ const formWrapped = reduxForm({
   // 'streamCreate' is similar to a state object.
   form: 'streamCreate',
   validate: validate
 })(StreamCreate);
+
+export default connect(null, { createStream: createStream })(formWrapped);
