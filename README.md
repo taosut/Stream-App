@@ -332,4 +332,15 @@ The general plan is to create the following structure:
     </form>
     ```
 
-    
+12. Create a function `validate()` to handle streamCreate validations. Inside this function, there's an `error = {}` object that will get key-value pairs of errors if there are any. This function returns the `error` object.
+
+13. To wire the `validate()` function up to redux-form, we need to pass it into the `reduxForm({...})`  as a key-value pair.
+
+    ```javascript
+    export default reduxForm({
+        form: 'streamCreate',
+        validate: validate // or just validate.
+    })(streamCreate);
+    ```
+
+14. Inside `renderInput()`, destructure one additional property 'meta'. This property contains the error message. Inside `renderInput()`, print `meta.error` under the `<input>`.
