@@ -6,7 +6,19 @@ A react project for learning purpose, taught by Stephen Grider's online course.
 
 ## Project Timeline / Notes
 
-[TOC]
+### Table of contents
+
+[Initial Setup](#initial-setup)
+[Router Setup](#router-setup)
+[Navigation Setup](#navigation-setup)
+[Component Scaffolding](#component-scaffolding)
+[Header Component](#header-component)
+[User Authentication](#user-authentication)
+[Redux Refactor](#redux-refactor)
+[Redux DevTools](#redux-devtools)
+[Redux Form](#redux-form)
+[RESTful Setup](#restful-setup)
+
 
 ### Initial Setup
 
