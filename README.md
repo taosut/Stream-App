@@ -6,6 +6,8 @@ A react project for learning purpose, taught by Stephen Grider's online course.
 
 ## Project Timeline / Notes
 
+[TOC]
+
 ### Initial Setup
 
 1. Install latest version of Nodejs.
@@ -508,4 +510,67 @@ The general plan is to create the following structure:
     | Update a record           | PUT    | /streams/:id | Single record    |
     | Delete a record           | DELETE | /streams/:id | Nothing          |
 
-18. 
+18. From this RESTful convention table, we can create all the action-creators right now.
+
+    Create types for each action-creator inside `types.js`:
+
+    ```javascript
+    export const FETCH_STREAMS = 'FETCH_STREAMS';
+    export const FETCH_STREAM = 'FETCH_STREAM';
+    export const DELETE_STREAM = 'DELETE_STREAM';
+    export const EDIT_STREAM = 'EDIT_STREAM';
+    ```
+
+    Import all of them inside `actions/index.js`:
+
+    ```javascript
+    import { 
+      SIGN_IN, 
+      SIGN_OUT, 
+      CREATE_STREAM,
+      FETCH_STREAMS,
+      FETCH_STREAM,
+      DELETE_STREAM,
+      EDIT_STREAM 
+    } from './types';
+    ```
+
+    Create a draft for all the action-creators:
+
+    ```javascript
+    export const fetchStreams = () => {
+      return async (dispatch) => {
+        // Make GET request to '/streams' using our axios instance.
+        const response = await streams.get('/streams');
+    
+        dispatch({ type: FETCH_STREAMS, payload: response.data });
+      };
+    };
+    
+    export const fetchStream = (id) => {
+      return async (dispatch) => {
+        const response = await streams.get(`/streams/${id}`);
+        
+        dispatch({ type: FETCH_STREAM, payload: response.data });
+      };
+    };
+    
+    export const editStream = (id, formValues) => {
+      return async (dispatch) => {
+        const response = await streams.put(`/streams/${id}`, formValues);
+    
+        dispatch({type: EDIT_STREAM, payload: response.data});
+      };
+    };
+    
+    export const deleteStream = (id) => {
+      return async (dispatch) => {
+        // We don't get any response.
+        await streams.delete(`/streams/${id}`);
+    
+        dispatch({ type: DELETE_STREAM, payload: id });
+      };
+    };
+    ```
+
+    
