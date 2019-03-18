@@ -8,16 +8,16 @@ A react project for learning purpose, taught by Stephen Grider's online course.
 
 ### Table of contents
 
-[Initial Setup](#initial-setup)
-[Router Setup](#router-setup)
-[Navigation Setup](#navigation-setup)
-[Component Scaffolding](#component-scaffolding)
-[Header Component](#header-component)
-[User Authentication](#user-authentication)
-[Redux Refactor](#redux-refactor)
-[Redux DevTools](#redux-devtools)
-[Redux Form](#redux-form)
-[RESTful Setup](#restful-setup)
+[Initial Setup](#initial-setup)<br>
+[Router Setup](#router-setup)<br>
+[Navigation Setup](#navigation-setup)<br>
+[Component Scaffolding](#component-scaffolding)<br>
+[Header Component](#header-component)<br>
+[User Authentication](#user-authentication)<br>
+[Redux Refactor](#redux-refactor)<br>
+[Redux DevTools](#redux-devtools)<br>
+[Redux Form](#redux-form)<br>
+[RESTful Setup](#restful-setup)<br>
 
 
 ### Initial Setup
