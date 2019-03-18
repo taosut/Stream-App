@@ -477,3 +477,35 @@ The general plan is to create the following structure:
     ```
 
 14. Test the action-creator out by going to `localhost:3000/streams/new` and submit form. Check `Network > XHR` tab in chrome. If there's a POST request and status is 201, then it means it worked.
+
+15. In the 'createStream' action-creator, we need to get a handle to the network request response that came back from the POST request.
+
+    ```javascript
+    const response = streams.post('/streams', formValues);
+    ```
+
+16. Now, dispatch an action with the payload of that stream. Then we can eventually create a reducer and pick up that stream we just created to do whatever we need to do with it.
+
+    Create a new action-creator type in `client/src/actions/types.js`
+
+    ```javascript
+    export const CREATE_STREAM = 'CREATE_STREAM';
+    ```
+
+    Back inside `createStream() = formValues => async dispatch => { ... }`
+
+    ```javascript
+    dispatch({ type: CREATE_STREAM, payload: response.data });
+    ```
+
+17. RESTful Convention w/ Response column:
+
+    | Action                    | Method | Route        | Response         |
+    | ------------------------- | ------ | ------------ | ---------------- |
+    | List of all records       | GET    | /streams     | Array of records |
+    | Get one particular record | GET    | /streams/:id | Single record    |
+    | Create record             | POST   | /streams     | Single record    |
+    | Update a record           | PUT    | /streams/:id | Single record    |
+    | Delete a record           | DELETE | /streams/:id | Nothing          |
+
+18. 

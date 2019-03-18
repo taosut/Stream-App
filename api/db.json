@@ -9,6 +9,16 @@
       "title": "Stream2",
       "description": "second stream test",
       "id": 2
+    },
+    {
+      "title": "Stream3",
+      "description": "Testing console.log(response.data)",
+      "id": 3
+    },
+    {
+      "title": "Stream4",
+      "description": "More testing...",
+      "id": 4
     }
   ]
 }

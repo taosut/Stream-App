@@ -5,7 +5,7 @@
 // * Don't forget the 'export' keyword in front of each action creator.
 // The reducer can access action.type and action.payload.
 
-import { SIGN_IN, SIGN_OUT } from './types';
+import { SIGN_IN, SIGN_OUT, CREATE_STREAM } from './types';
 import streams from '../apis/streams';
 
 export const signIn = (userId) => {
@@ -27,6 +27,9 @@ export const createStream = (formValues) => {
   return async (dispatch) => {
     // POST request with axios.
     // Passing in all the formValues. (example: title, description)
-    streams.post('/streams', formValues);
+    const response = streams.post('/streams', formValues);
+
+    // Manually dispatch action.
+    dispatch({ type: CREATE_STREAM, payload: response.data });
   }
 }
