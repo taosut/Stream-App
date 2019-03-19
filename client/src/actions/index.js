@@ -28,13 +28,23 @@ export const signOut = () => {
   };
 };
 
+// formValues:
+// {
+//   description: ""
+//   title: ""
+// }
 export const createStream = (formValues) => {
   // Create async action-creator; use redux-thunk.
   // Return an arrow function from our action-creator.
-  return async (dispatch) => {
+  return async (dispatch, getState) => {
+    // getState: has access to redux store.
+    // Get state object property 'userId' from authReducer.
+    // Note: getState is a function!
+    const { userId } = getState().auth;
+
     // POST request with axios.
     // Passing in all the formValues. (example: title, description)
-    const response = await streams.post('/streams', formValues);
+    const response = await streams.post('/streams', { ...formValues, userId: userId });
 
     // Manually dispatch action.
     // response.data contains the { id, description, title } of the stream

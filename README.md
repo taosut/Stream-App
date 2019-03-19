@@ -712,3 +712,49 @@ The general plan is to create the following structure:
       }
     ```
 
+25. We want to show 'edit' and 'delete' buttons only if the stream belongs to that user. Thus, we need to add an extra property to each stream when its first created. Inside the `actions/index.js`
+
+    ```javascript
+    export const createStream = (formValues) => {
+      // Second argument 'getState' is a function that has access to store.
+      return async (dispatch, getState) => {
+        // Access 'userId' state property from authReducer.
+        const { userId } = getState().auth;
+        
+        // ES16 syntax to add new property to object then POST request.
+        const response = await streams.post('/streams', { ...formValues, userId: userId });
+    
+        dispatch({ type: CREATE_STREAM, payload: response.data });
+      };
+    };
+    ```
+
+26. Now to show the 'edit' and 'delete' button. Open `streams/StreamList`.
+
+    ```javascript
+    const mapStateToProps = (state) => {
+      return { 
+        streams: Object.values(state.streams),
+        // Get currently signed-in user's Id.
+        currentUserId: state.auth.userId
+      }
+    };
+    ```
+
+27. Now create a helper function to render the buttons.
+
+    ```javascript
+      renderAdmin(stream) {
+        if (stream.userId === this.props.currentUserId) {
+          return (
+            <div className="right floated content">
+              <button className="ui button primary">Edit</button>
+              <button className="ui button negative">Delete</button>
+            </div>
+          );
+        }
+      }
+    ```
+
+28. Call `renderAdmin()` inside of `renderList()`.
+
