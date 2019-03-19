@@ -758,3 +758,20 @@ The general plan is to create the following structure:
 
 28. Call `renderAdmin()` inside of `renderList()`.
 
+29. We want to show a 'Create Stream' button on the bottom of the 'StreamList' component. To do this, we need to check if the user is currently signed-in. Inside `streams/StreamList.js`,
+
+    ```javascript
+    import { Link } from 'react-router-dom';
+    
+      renderCreate() {
+        if (this.props.isSignedIn) {
+          return (
+            <div style={{ textAlign: 'right' }}>
+              <Link to="/streams/new" className="ui button primary">Create Stream</Link>
+            </div>
+          );
+        }
+      }
+    ```
+
+    
