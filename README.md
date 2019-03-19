@@ -774,4 +774,43 @@ The general plan is to create the following structure:
       }
     ```
 
+30. After the user have successfully created a stream, we want to navigate the user back to the 'StreamList' component. We are going to make use of the 'History' (Created by BrowserRouter) object make change to the address bar. This 'History' object is passed as a prop to all the components inside 'BrowserRouter'. However, we are not trying to do a navigation from a component, but from a action-creator. A good solution is to create the history object ourselves instead, and import it whenever we need to get access to it.
+
+31. Create a new file `src/history.js`
+
+    ```javascript
+    import { createBrowserHistory } from 'history';
+    
+    export default createBrowserHistory();
+    ```
+
+32. Inside `src/components/App.js`
+
+    ```jsx
+    import history from '../history';
+    // Replace BrowserRouter with Router.
+    import { Router } from 'react-router-dom';
+    
+    ...
+    <Router history={history}>
+        ...
+    </Router>
+    ...
+    ```
+
+33. Back inside `src/actions/index.js`
+
+    ```javascript
+    export const createStream = (formValues) => {
+      return async (dispatch, getState) => {
+        const { userId } = getState().auth;
+        const response = await streams.post('/streams', { ...formValues, userId: userId });
+        dispatch({ type: CREATE_STREAM, payload: response.data });
+    
+        // Programmatic Navigation back to StreamList route.
+        history.push('/');
+      };
+    };
+    ```
+
     

@@ -5,6 +5,7 @@
 // * Don't forget the 'export' keyword in front of each action creator.
 // The reducer can access action.type and action.payload.
 import streams from '../apis/streams';
+import history from '../history';
 import { 
   SIGN_IN, 
   SIGN_OUT, 
@@ -50,6 +51,9 @@ export const createStream = (formValues) => {
     // response.data contains the { id, description, title } of the stream
     // just created.
     dispatch({ type: CREATE_STREAM, payload: response.data });
+
+    // Programmatic Navigation back to StreamList route.
+    history.push('/');
   };
 };
 
