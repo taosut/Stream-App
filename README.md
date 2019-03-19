@@ -585,4 +585,130 @@ The general plan is to create the following structure:
     };
     ```
 
+19. Updating Reducer Syntaxes
+
+    | Action                             | Bad                | Good                                              |
+    | ---------------------------------- | ------------------ | ------------------------------------------------- |
+    | Removing an element from an array  | state.pop()        | state.filter(element => element !== 'hi')         |
+    | Adding an element to an array      | state.push('hi')   | [...state, 'hi']                                  |
+    | Replacing an element in an array   | state[0] = 'hi'    | state.map(el => el === 'hi'? 'bye' : el)          |
+    | Updating a property in an object   | state.name = 'Sam' | {...state, name: 'Sam'}                           |
+    | Adding a property to an object     | state.age = 30     | {...state, age: 30}                               |
+    | Removing a property from an object | delete state.name  | {...state, age: undefined}; _.omit{state, 'age'}; |
+
+20. Create `streamReducer.js`. Install lodash `npm install --save lodash`.
+
+    ```javascript
+    import _ from 'lodash';
     
+    import { 
+      CREATE_STREAM,
+      FETCH_STREAMS,
+      FETCH_STREAM,
+      DELETE_STREAM,
+      EDIT_STREAM 
+    } from '../actions/types';
+    
+    export default (state = {}, action) => {
+      switch (action.type) {
+        case CREATE_STREAM:
+          return { ...state, [action.payload.id]: action.payload };
+    
+        // Require lodash library
+        // _.mapKeys() takes the action.payload array and returns
+        // an object with keys assigned to each element in action.payload.
+        // The key is the value 'id' in each of the original array elements.
+        case FETCH_STREAMS:
+          return {...state, ..._.mapKeys(action.payload, 'id')}
+    
+        case FETCH_STREAM:
+          return { ...state, [action.payload.id]: action.payload };
+    
+        // Require lodash library.
+        case DELETE_STREAM:
+          return _.omit(state, action.payload);
+    
+        case EDIT_STREAM:
+          return { ...state, [action.payload.id]: action.payload };
+    
+        default:
+          return state;
+      }
+    }
+    ```
+
+21. Inside `client/src/reducers/index.js`
+
+    ```javascript
+    import streamReducer from './streamReducer';
+    
+    export default combineReducers({
+      ...,
+      streams: streamReducer
+    });
+    ```
+
+22. Connect the **fetchStreams** action-creator to **StreamList** component. Inside StreamList.js
+
+    ```javascript
+    class StreamList extends React.Component {
+      componentDidMount() {
+        // Call action-creator.
+        this.props.fetchStreams();
+      }
+    
+      render() {
+        return (
+          <div>Stream List</div>
+        );
+      }
+    }
+    
+    export default connect(null, { fetchStreams: fetchStreams })(StreamList);
+    ```
+
+23. Now we want to render all streams we have inside json-server on the **StreamList** component. We need to get our list of stream availalbe as props. We know they're right now stored inside the streams reducer inside our store. So, we create a mapStateToProps method and pass it into connect().
+
+    ```javascript
+    import { connect } from 'react-redux';
+    import { fetchStreams } from '../../actions';
+    
+    const mapStateToProps = (state) => {
+      // Object.values gets rid of the key, and turns each value in the object
+      // into an element of the returned array.
+      return { streams: Object.values(state.streams) }
+    };
+    
+    export default connect(mapStateToProps, { fetchStreams: fetchStreams })(StreamList);
+    ```
+
+24. Create a new function called `renderList()` to style each stream inside `this.props.streams` and show it on the screen. Then, call this function inside `render()`.
+
+    ```javascript
+      renderList() {
+        return this.props.streams.map((stream) => {
+          // jsx
+          return (
+            <div className="item" key={stream.id}>
+              <i className="large middle aligned icon camera" />
+              <div className="content">
+                {stream.title}
+                <div className="description">{stream.description}</div>
+              </div>
+            </div>
+          );
+        });
+      }
+    
+      render() {
+        return (
+          <div>
+            <h2>Streams</h2>
+            <div className="ui celled list">
+              {this.renderList()}
+            </div>
+          </div>
+        );
+      }
+    ```
+

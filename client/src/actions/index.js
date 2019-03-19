@@ -37,6 +37,8 @@ export const createStream = (formValues) => {
     const response = await streams.post('/streams', formValues);
 
     // Manually dispatch action.
+    // response.data contains the { id, description, title } of the stream
+    // just created.
     dispatch({ type: CREATE_STREAM, payload: response.data });
   };
 };
