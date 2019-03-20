@@ -1178,4 +1178,8 @@ The general plan is to create the following structure:
     })(StreamEdit);
     ```
 
-42. Back inside the action-creator, we should programmatically navigate the user back to the root route after the action has been dispatched. However, after testing out the edit submission, the two buttons are gone.
+42. Back inside the action-creator, we should programmatically navigate the user back to the root route after the action has been dispatched. 
+
+    **PROBLEM:** However, after testing out the edit submission, the two buttons are gone. After checking `Network > XHR > streams GET > Response`, the userId prop has disappeared. This happens because 'userId' is not a property of the formValues that we passed into editStream for updating.
+
+    **SOLUTION**: Instead of using PUT request inside editStream, we use PATCH request. (PUT request updates all properties of a record; PATCH request updates some properties of a record.)

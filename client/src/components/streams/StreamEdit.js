@@ -23,6 +23,8 @@ class StreamEdit extends React.Component {
   onSubmit = (formValues) => {
     // Change #8: Call the editStream action-creator instead of just printing out the formValues.
     // console.log(formValues);
+    
+    // Problem: After the PUT request, we are missing userId inside our reducer state object.
     this.props.editStream(this.props.stream.id, formValues);
   }
 
@@ -63,6 +65,7 @@ const mapStateToProps = (state, ownProps) => {
     // We need to get access to props.match.params.id.
     // * Unexpected behavior: stream is null if user loads to this route first,
     //   instead of clicking the 'edit' button from StreamList.
+    // * Solution: call fetchStream action-creator first.
     stream: state.streams[ownProps.match.params.id]
   };
 };
