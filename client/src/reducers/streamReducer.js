@@ -13,6 +13,18 @@ import {
 export default (state = {}, action) => {
   switch (action.type) {
     case CREATE_STREAM:
+      // Adds a new property to the state object.
+      // * [action.payload.id] is the key for the new property to be created inside state object.
+      // * action.payload is the object returned from the createStream action-creator.
+      //   which is going to be the value of the new property.
+      // {
+      //    SOME_NUMBER: { 
+      //                    id: SOME_NUMBER,
+      //                    title: SOME_TITLE,
+      //                    description: SOME_DESC,
+      //                    userId: SOME_USERID
+      //                 }
+      // }
       return { ...state, [action.payload.id]: action.payload };
 
     // Require lodash library

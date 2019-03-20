@@ -44,11 +44,14 @@ export const createStream = (formValues) => {
     const { userId } = getState().auth;
 
     // POST request with axios.
-    // Passing in all the formValues. (example: title, description)
+    // The second argument contains the data to be created/added inside the db.json file.
+    // * {...formValues, userId: userId} adds a new property in addition to the form
+    //   that the user just submitted.
+    // This new object is pushed to the 'streams' array inside db.json.
     const response = await streams.post('/streams', { ...formValues, userId: userId });
 
-    // Manually dispatch action.
-    // response.data contains the { id, description, title } of the stream
+    // Manually dispatch action to the reducer.
+    // response.data contains the { id, description, title, userId } of the stream
     // just created.
     dispatch({ type: CREATE_STREAM, payload: response.data });
 

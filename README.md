@@ -813,4 +813,26 @@ The general plan is to create the following structure:
     };
     ```
 
+34. URL-based Selection
+
+    | Path                | Component    |
+    | ------------------- | ------------ |
+    | /                   | StreamList   |
+    | /streams/new        | StreamCreate |
+    | /streams/edit/:id   | StreamEdit   |
+    | /streams/delete/:id | StreamDelete |
+    | /streams/:id        | StreamShow   |
+
+35. The 'Edit' button should navigate the user to the StreamEdit component. Inside StreamList,
+
+    ```jsx
+    <Link to={`/streams/edit/${stream.id}`} className="ui button primary">Edit</Link>
+    ```
+
+    We need to fix the StreamEdit path inside App.js as well.
+
+    ```jsx
+    <Route path="/streams/edit/:id" exact component={StreamEdit} />
+    ```
+
     

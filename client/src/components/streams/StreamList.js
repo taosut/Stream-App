@@ -8,7 +8,18 @@ import { fetchStreams } from '../../actions';
 
 class StreamList extends React.Component {
   componentDidMount() {
-    // Call action-creator.
+    // Call fetchStream action-creator.
+    // The action-creator fetchStreams makes a network request to json-server
+    // to retrieve the entire array the form:
+    // [
+    //    {
+    //      id: STREAM_ID,
+    //      title: STREAM_TITLE,
+    //      description: STREAM_DESCRIPTION,
+    //      userId: SIGNED_IN_USER_ID
+    //    },
+    //    ...
+    // ]
     this.props.fetchStreams();
   }
 
@@ -16,7 +27,7 @@ class StreamList extends React.Component {
     if (stream.userId === this.props.currentUserId) {
       return (
         <div className="right floated content">
-          <button className="ui button primary">Edit</button>
+          <Link to={`/streams/edit/${stream.id}`} className="ui button primary">Edit</Link>
           <button className="ui button negative">Delete</button>
         </div>
       );
@@ -24,6 +35,8 @@ class StreamList extends React.Component {
   }
 
   renderList() {
+    // this.props.streams is an array as a result from mapStateToProps.
+    // We can use the .map() js method to style each stream with jsx.
     return this.props.streams.map((stream) => {
       // jsx
       return (
@@ -66,7 +79,12 @@ class StreamList extends React.Component {
 const mapStateToProps = (state) => {
   // Object.values gets rid of the key, and turns each value in the object
   // into an element of the returned array.
-  return { 
+  return {
+    // state.streams is the entire state object inside of streamReducer.
+    // e.g. { id#: { id, title, description, userId }, {...} }
+    // We convert this into an array using Object.values() method.
+    // It simply gets rid of the 'key', leaving the 'value' to become elements.
+    // e.g. [ {id, title, description, userId}, {...} ]
     streams: Object.values(state.streams),
     currentUserId: state.auth.userId,
     isSignedIn: state.auth.isSignedIn
