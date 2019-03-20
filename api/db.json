@@ -32,8 +32,7 @@
     },
     {
       "title": "Stream7",
-      "description": "LOLLLLL!!!!!!",
-      "userId": "118365918835888526147",
+      "description": "edited lol!",
       "id": 7
     },
     {
@@ -47,6 +46,12 @@
       "description": "123123",
       "userId": "118365918835888526147",
       "id": 9
+    },
+    {
+      "title": "Stream10",
+      "description": "StreamCreate reuse test",
+      "userId": "118365918835888526147",
+      "id": 10
     }
   ]
 }

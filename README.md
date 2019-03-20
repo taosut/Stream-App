@@ -984,4 +984,198 @@ The general plan is to create the following structure:
     // export default connect(null)(formWrapped);
     ```
 
+39. Back inside StreamCreate, we need to refactor the code so it uses the StreamForm we just created. It should show a instance of StreamForm and passes a callback onSubmit and nothing else.
+
+    ```jsx
+    // External Imports
+    import React from 'react';
     
+    // Change #1: We don't need Field and reduxForm()() anymore since we are
+    //            calling an instance of StreamForm.
+    // import { Field, reduxForm } from 'redux-form';
+    import { connect } from 'react-redux';
+    
+    // Internal Imports
+    import { createStream } from '../../actions';
+    // Change #2: Import the StreamForm component we just created.
+    import StreamForm from './StreamForm';
+    
+    class StreamCreate extends React.Component {
+      // We only care about meta.error and meta.touch
+      // Change #3: We don't need to render errors anymore, since this logic is already
+      //            copied over to StreamForm.
+      // renderError({ error, touched }) {
+      //   if (touched && error) {
+      //     return (
+      //       // Note that ui semantic by default hides error messages.
+      //       <div className="ui error message">
+      //         <div className="header">
+      //           {error}
+      //         </div>
+      //       </div>
+      //     );
+      //   }
+      // }
+    
+      // Change #4: We don't need to render inputs anything, since this logic is already
+      //            copied over to StreamForm.
+      // renderInput = (/*formProps*/ { input, label, meta }) => {
+      //   // formProps is an object returned from redux-form Field.
+      //   // return <input onChange={formProps.input.onChange} value={formProps.input.value} />;
+    
+      //   // This ... syntax takes the formProps.input properties (object) and add them as properties
+      //   // to the input element.
+      //   const fieldClassName = `field ${meta.touched && meta.error ? 'error' : ''}`;
+    
+      //   return (
+      //     <div className={fieldClassName}>
+      //       <label>{label}</label>
+      //       <input {.../*formProps.input*/input} autoComplete="off" />
+      //       {this.renderError(meta)}
+      //     </div>
+      //   );
+      // }
+    
+    
+      onSubmit = (formValues) => {
+        // formValues contains the value of the two fields.
+        // console.log(formValues);
+    
+        this.props.createStream(formValues);
+      }
+    
+      render() {
+        return (
+          // Change #5: We don't need to show form anymore, again it's done in StreamForm.
+          // <form className="ui form error" onSubmit={this.props.handleSubmit(this.onSubmit)}>
+          //   <Field name="title" component={this.renderInput} label="Enter Title" />
+          //   <Field name="description" component={this.renderInput} label="Enter Description" />
+          //   <button className="ui button primary">Submit</button>
+          // </form>
+    
+          // Change #6: Call an instance of StreamForm component and pass in onSubmit callback.
+          <div>
+            <h3>Create a Stream</h3>
+            {/* onSubmit will become a prop inside StreamForm. */}
+            <StreamForm onSubmit={this.onSubmit}></StreamForm>
+          </div>
+        );
+      }
+    }
+    
+    // Change #7: No longer need validate() as StreamForm has it.
+    // Make sure the user doesn't create a stream with empty title and description.
+    // validate() is called whenever it is intially rendered or when user interacts
+    // with it.
+    // const validate = (formValues) => {
+    //   const errors = {};
+    
+    //   // formValues.title comes from the 'name' property from <Field>
+    //   if (!formValues.title) {
+    //     // If user didn't enter title.
+    //     errors.title = 'You must enter a stream title';
+    //   }
+    
+    //   if (!formValues.description) {
+    //     errors.description = 'You must enter a stream description';
+    //   }
+    
+    //   // * If the error name is identical to the formValues.name then this error
+    //   //   will be passed to the component that renders that Field. (renderInput())
+    //   return errors;
+    // };
+    
+    // Change #8: No longer need wrapping as it's done inside StreamForm already.
+    // /*export default*/ const formWrapped = reduxForm({
+    //   // 'streamCreate' is similar to a state object.
+    //   form: 'streamCreate',
+    //   validate: validate
+    // })(StreamCreate);
+    
+    // Change #9: Don't need 'formWrapped' in the second paranthesis anymore.
+    //            Replace it with StreamCreate.
+    export default connect(null, { createStream: createStream })(/*formWrapped*/StreamCreate);
+    ```
+
+40. After this big refactor, check in browser to see if there's any error in StreamCreate component.
+
+41. Now refactor StreamEdit.
+
+    ```jsx
+    import React from 'react';
+    import { connect } from 'react-redux';
+    // Change #1: import editStream action-creator.
+    import { fetchStream, editStream } from '../../actions';
+    // Change #2: import StreamForm component.
+    import StreamForm from './StreamForm';
+    // Change #6: import lodash
+    import _ from 'lodash';
+    
+    class StreamEdit extends React.Component {
+      componentDidMount() {
+        // Call action-creator fetchStream
+        const currentStreamId = this.props.match.params.id;
+    
+        // The action-creator gets the :id from url params.
+        // Then it creates a network request to db.json and obtains the stream with this id.
+        // Then it dispatches the payload with this stream to streamReducer.
+        // The reducer updates/adds this stream property inside its state object.
+        this.props.fetchStream(currentStreamId);
+      }
+    
+      // Change #3: Create a onSubmit callback function to pass into StreamForm.
+      onSubmit = (formValues) => {
+        // Change #8: Call the editStream action-creator instead of just printing out the formValues.
+        // console.log(formValues);
+        this.props.editStream(this.props.stream.id, formValues);
+      }
+    
+      render() {
+        if (!this.props.stream) {
+          return (
+            <div>Loading...</div>
+          );
+        }
+    
+        return (
+          // Change #4: Delete the the <div> that prints stream title. And
+          //            call the StreamForm instance with the callback onSubmit function.
+          // <div>{this.props.stream.title}</div>
+          <div>
+            <h3>Edit a Stream</h3>
+            {/* Change #5: Pass in a prop called 'initialValues' (redux-form keyword). */}
+            {/*            The outer brackets indicate that we're trying to write js code. */}
+            {/*            The inner brackets indicate that we're trying to create an object. */}
+            {/*            The reason that we're creating a title and description key is because */}
+            {/*            we have two Field elements and their name prop is title and description. */}
+            <StreamForm 
+              // initialValues={{ title: this.props.stream.title, description: this.props.stream.description }} 
+              
+              // Change #7: Equivalent to the commented line above, but using lodash method.
+              initialValues = {_.pick(this.props.stream, 'title', 'description')}
+              onSubmit={this.onSubmit}
+            />
+          </div>
+        );
+      }
+    }
+    
+    // The first argument state refers to the object inside combineReducers().
+    // The second argument gets access to all the props of the current component.
+    const mapStateToProps = (state, ownProps) => {
+      return {
+        // We need to get access to props.match.params.id.
+        // * Unexpected behavior: stream is null if user loads to this route first,
+        //   instead of clicking the 'edit' button from StreamList.
+        stream: state.streams[ownProps.match.params.id]
+      };
+    };
+    
+    // Change #5: Pass in editStream action-creator to connect()().
+    export default connect(mapStateToProps, { 
+      fetchStream: fetchStream,
+      editStream: editStream
+    })(StreamEdit);
+    ```
+
+42. Back inside the action-creator, we should programmatically navigate the user back to the root route after the action has been dispatched. However, after testing out the edit submission, the two buttons are gone.

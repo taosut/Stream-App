@@ -1,6 +1,11 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { fetchStream } from '../../actions';
+// Change #1: import editStream action-creator.
+import { fetchStream, editStream } from '../../actions';
+// Change #2: import StreamForm component.
+import StreamForm from './StreamForm';
+// Change #6: import lodash
+import _ from 'lodash';
 
 class StreamEdit extends React.Component {
   componentDidMount() {
@@ -14,6 +19,13 @@ class StreamEdit extends React.Component {
     this.props.fetchStream(currentStreamId);
   }
 
+  // Change #3: Create a onSubmit callback function to pass into StreamForm.
+  onSubmit = (formValues) => {
+    // Change #8: Call the editStream action-creator instead of just printing out the formValues.
+    // console.log(formValues);
+    this.props.editStream(this.props.stream.id, formValues);
+  }
+
   render() {
     if (!this.props.stream) {
       return (
@@ -22,7 +34,24 @@ class StreamEdit extends React.Component {
     }
 
     return (
-      <div>{this.props.stream.title}</div>
+      // Change #4: Delete the the <div> that prints stream title. And
+      //            call the StreamForm instance with the callback onSubmit function.
+      // <div>{this.props.stream.title}</div>
+      <div>
+        <h3>Edit a Stream</h3>
+        {/* Change #5: Pass in a prop called 'initialValues' (redux-form keyword). */}
+        {/*            The outer brackets indicate that we're trying to write js code. */}
+        {/*            The inner brackets indicate that we're trying to create an object. */}
+        {/*            The reason that we're creating a title and description key is because */}
+        {/*            we have two Field elements and their name prop is title and description. */}
+        <StreamForm 
+          // initialValues={{ title: this.props.stream.title, description: this.props.stream.description }} 
+          
+          // Change #7: Equivalent to the commented line above, but using lodash method.
+          initialValues = {_.pick(this.props.stream, 'title', 'description')}
+          onSubmit={this.onSubmit}
+        />
+      </div>
     );
   }
 }
@@ -38,4 +67,8 @@ const mapStateToProps = (state, ownProps) => {
   };
 };
 
-export default connect(mapStateToProps, {fetchStream: fetchStream})(StreamEdit);
+// Change #5: Pass in editStream action-creator to connect()().
+export default connect(mapStateToProps, { 
+  fetchStream: fetchStream,
+  editStream: editStream
+})(StreamEdit);
