@@ -835,4 +835,58 @@ The general plan is to create the following structure:
     <Route path="/streams/edit/:id" exact component={StreamEdit} />
     ```
 
+36. Inside the StreamEdit component, we have a few useful props.
+
+    ```javascript
+    this.props.match.params.id // :id from the url.
+    ```
+
+    We want to show information of the stream the user is trying to edit. This information is available inside the redux store 'streams'. Inside StreamEdit.js,
+
+    ```javascript
+    import { connect } from 'react-redux';
+    
+    const mapStateToProps = (state, ownProps) => {
+      return {
+        stream: state.streams[ownProps.match.params.id]
+      };
+    };
+    
+    export default connect(mapStateToProps)(StreamEdit);
+    ```
+
+    **Unexpected Behavior: ** when user loads up `/streams/edit/:id`, `props.stream` will have the value of  *null*. This happens because when user first loads up our application, the redux state object is empty. However, if the user goes to the root route first (ShowStreams) then click on the 'edit' button, then the state object is properly initialized and `props.stream` will return the correct stream information.
+
+    **Solution:** with React-Router, each component needs to be designed to work in isolation (fetch its own data!).
+
+37. Refactor the StreamEdit component into class-based component. And call action-creator fetchStream().
+
+    ```jsx
+    import { fetchStream } from '../../actions';
+    
+    class StreamEdit extends React.Component {
+        componentDidMount() {
+            const currentStreamId = this.props.match.params.id;
+            this.props.fetchStream(currentStreamId);
+        }
+        
+        render() {
+            if (!this.props.stream) {
+          		return (
+            		<div>Loading...</div>
+          		);
+            }
+            
+            return (
+          		<div>{this.props.stream.title}</div>
+        	);
+        }
+        
+        // mapStateToProps method is unchanged.
+        // ...
+        
+        export default connect(mapStateToProps, {fetchStream: fetchStream})(StreamEdit);
+    }
+    ```
+
     
