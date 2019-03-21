@@ -15,16 +15,14 @@ const Modal = (props) => {
   //       we will be replacing everything inside the body with modal. So instead,
   //       we will go into index.html and create a new <div> with some id. Then,
   //       target that <div> to target and place our modal into.
+  console.log(props);
   return ReactDOM.createPortal (
     <div onClick={() => history.push('/')} className="ui dimmer modals visible active">
       <div onClick={(e) => e.stopPropagation()} className="ui standard modal visible active">
         {/* Fill in modal with header, content, and actions. */}
-        <div className="header">Delete Stream</div>
-        <div className="content">Are you sure you want to delete this stream?</div>
-        <div className="actions">
-          <button className="ui button primary">Delete</button>
-          <button className="ui button">Cancel</button>
-        </div>
+        <div className="header">{props.title}</div>
+        <div className="content">{props.content}</div>
+        <div className="actions">{props.actions}</div>
       </div>
     </div>,
     document.querySelector('#modal')

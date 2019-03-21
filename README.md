@@ -1420,4 +1420,40 @@ The general plan is to create the following structure:
     </div>
     ```
 
+11. Right now, our modal is hardcoded. We want it to be reusable. The modal should be configured by some props that the parent component.
+
+    StreamDelete.js:
+
+    ```jsx
+    const actions = (
+        <div>
+          <button className="ui button negative">Delete</button>
+          <button className="ui button">Cancel</button>
+        </div>
+    );
     
+    return (
+        <div>
+            Stream Delete
+            <Modal 
+                title="Delete Stream"
+                content="Are you sure you want to delete this stream?"
+                actions={actions}
+                />
+        </div>
+    );
+    ```
+
+    
+
+    Modal.js:
+
+    ```jsx
+    <div className="header">{props.title}</div>
+    <div className="content">{props.content}</div>
+    <div className="actions">{props.actions}</div>
+    ```
+
+    **Problem**: The buttons are are alittle bit placed against the button of the modal. But if we only have one button in the actions jsx variable, the button is aligned correctly. When we have an extra div inside of our class name actions, semantic-ui does not style them correctly. 
+
+    **Solution**: 
