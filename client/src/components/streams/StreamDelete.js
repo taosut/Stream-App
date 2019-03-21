@@ -2,13 +2,14 @@ import React from 'react';
 
 // Internal Imports
 import Modal from '../Modal';
+import history from '../../history';
 
 const StreamDelete = () => {
   const actions = (
-    <div>
-      <button className="ui button negative">Delete</button>
-      <button className="ui button">Cancel</button>
-    </div>
+    <React.Fragment>
+    <button className="ui button negative">Delete</button>
+    <button className="ui button">Cancel</button>
+    </React.Fragment>
   );
 
   return (
@@ -18,6 +19,7 @@ const StreamDelete = () => {
         title="Delete Stream"
         content="Are you sure you want to delete this stream?"
         actions={actions}
+        onDismiss={() => { history.push('/'); }}
       />
     </div>
   );

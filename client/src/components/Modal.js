@@ -4,7 +4,7 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 
 // Internal Imports
-import history from '../history';
+// import history from '../history';
 
 const Modal = (props) => {
   // When we create a portal, the return value of our componet is going to change a bit.  
@@ -17,7 +17,7 @@ const Modal = (props) => {
   //       target that <div> to target and place our modal into.
   console.log(props);
   return ReactDOM.createPortal (
-    <div onClick={() => history.push('/')} className="ui dimmer modals visible active">
+    <div onClick={props.onDismiss} className="ui dimmer modals visible active">
       <div onClick={(e) => e.stopPropagation()} className="ui standard modal visible active">
         {/* Fill in modal with header, content, and actions. */}
         <div className="header">{props.title}</div>

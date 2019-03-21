@@ -1456,4 +1456,30 @@ The general plan is to create the following structure:
 
     **Problem**: The buttons are are alittle bit placed against the button of the modal. But if we only have one button in the actions jsx variable, the button is aligned correctly. When we have an extra div inside of our class name actions, semantic-ui does not style them correctly. 
 
-    **Solution**: 
+    **Solution**: Use react fragment. Think of it as an invisible element that doesn't have anhy effect on the DOM.
+
+    ```jsx
+    <React.Fragment>
+        <button className="ui button negative">Delete</button>
+        <button className="ui button">Cancel</button>
+    </React.Fragment>
+    ```
+
+12. Now, last thing to refactor is the onClick navigation in the Modal component.
+
+    ```jsx
+    // history module no longer needed.
+    // import history from '../history';
+    
+    <div onClick={props.onDismiss} className="ui dimmer modals visible active">
+    	...
+    </div>
+    ```
+
+    In StreamDelete component,
+
+    ```jsx
+    
+    ```
+
+    
