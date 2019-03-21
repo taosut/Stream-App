@@ -1313,3 +1313,70 @@ The general plan is to create the following structure:
    **Solution:** instead of showing modal as a child of positioned, we are going to show modal as a child of the body. This is where react-portal comes into play. Recall, inside our react-app, every component is a child of the div with id of 'root'. Using portal, we can have StreamDelete to render a modal component but don't want it to render it as a direct child. We can render it as a child of some other element, such as the body element.
 
    In other words, we are making use of portals to get around of *context stacking* issue of css. 
+
+7. Create the modal component js file `components/modal.js`:
+
+   ```jsx
+   import React from 'react';
+   // Notice we usually only import ReactDOM in src/index.js only.
+   import ReactDOM from 'react-dom';
+   
+   const Modal = (props) => {
+     // When we create a portal, the return value of our componet is going to change a bit.  
+     // This createPortal() function is going to take two arguments.
+     // * The first argument is going to be some jsx to show on the screen.
+     // * The second argument renders the two modal divs as child of the body element.
+     // Note: if we are actually going to render the modal as a child of the body, then
+     //       we will be replacing everything inside the body with modal. So instead,
+     //       we will go into index.html and create a new <div> with some id. Then,
+     //       target that <div> to target and place our modal into.
+     return ReactDOM.createPortal (
+       <div className="ui dimmer modals visible active">
+         <div className="ui standard modal visible active">
+           asdfasdf sdfasdfsadf
+         </div>
+       </div>,
+   
+     );
+   };
+   
+   export default Modal;
+   ```
+
+   Inside `public/index.html`, create a div with id 'modal':
+
+   ```html
+   <div id="root"></div>
+   <div id="modal"></div>
+   ```
+
+8. Back inside Modal component, we provide a selector to that div in the second argument.
+
+   ```jsx
+   return ReactDOM.createPortal (
+       <div className="ui dimmer modals visible active">
+         <div className="ui standard modal visible active">
+           asdfasdf sdfasdfsadf
+         </div>
+       </div>,
+       document.querySelector('#modal')
+     );
+   ```
+
+9. Now to render this modal on the screen, we go to StreamDelete component:
+
+   ```jsx
+   import Modal from '../Modal';
+   
+   const StreamDelete = () => {
+     return (
+       <div>
+         Stream Delete
+         <Modal />
+       </div>
+     );
+   };
+   ...
+   ```
+
+   
