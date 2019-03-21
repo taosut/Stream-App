@@ -15,7 +15,6 @@ const Modal = (props) => {
   //       we will be replacing everything inside the body with modal. So instead,
   //       we will go into index.html and create a new <div> with some id. Then,
   //       target that <div> to target and place our modal into.
-  console.log(props);
   return ReactDOM.createPortal (
     <div onClick={props.onDismiss} className="ui dimmer modals visible active">
       <div onClick={(e) => e.stopPropagation()} className="ui standard modal visible active">

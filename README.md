@@ -1468,7 +1468,7 @@ The general plan is to create the following structure:
 12. Now, last thing to refactor is the onClick navigation in the Modal component.
 
     ```jsx
-    // history module no longer needed.
+    // history module no longer need
     // import history from '../history';
     
     <div onClick={props.onDismiss} className="ui dimmer modals visible active">
@@ -1479,7 +1479,107 @@ The general plan is to create the following structure:
     In StreamDelete component,
 
     ```jsx
+    import history from '../../history';
     
+    <Modal
+      ...
+      onDismiss={() => { history.push('/'); }}
+    />
+    ```
+
+13. Now we want to make the buttons actually work. As well as knowing which stream the modal wants to delete.
+
+    Inside App.js, change the route convention for StreamDelete:
+
+    ```jsx
+    <Route path="/streams/delete/:id" exact component={StreamDelete} />
+    ```
+
+    Inside StreamList component, change button element to Link and add a 'to' property to the delete button:
+
+    ```jsx
+    <Link to={`/streams/delete/${stream.id}`} className="ui button negative">Delete</Link>
+    ```
+
+    To make the delete button work, we need to first fetch the stream from the api with the action-creator fetchStream(). But we need to refactor StreamDelete to be a class-based component to begin.
+
+    ```jsx
+    class StreamDelete extends React.Component {
+      renderActions() {
+        return (
+          <React.Fragment>
+            <button className="ui button negative">Delete</button>
+            <button className="ui button">Cancel</button>
+          </React.Fragment>
+        );
+      }
+      
+      render() {
+        return (
+          <div>
+            Stream Delete
+            <Modal 
+              title="Delete Stream"
+              content="Are you sure you want to delete this stream?"
+              actions={this.renderActions()}
+              onDismiss={() => { history.push('/'); }}
+            />
+          </div>
+        );
+      }
+    }
+    ```
+
+    Recall that we need to pass in the stream id from the params to fetchStream(), and the params are stored inside of `this.props` . We can always console.log(this.props) to find out the exact path. Now let's call the fetchStream action-creator with this stream id.
+
+    ```jsx
+    import { connect } from 'react-redux';
+    import { fetchStream } from '../../actions';
+    
+    componentDidMount() {
+        this.props.fetchStream(this.props.match.params.id);
+    }
+    
+    export default connect(null, { fetchStream: fetchStream })(StreamDelete);
+    ```
+
+    We can confirm if this action-creator has successfully fetched stream from api by opening network tab in chrome.
+
+    Now that the action-creator has successfully made a GET request to the api, our redux state object contains this stream. To get access to the redux state object, we need to create a mapStateToProps method and hook it up in connect().
+
+    ```jsx
+    const mapStateToProps = (state, ownProps) => {
+      return {
+        stream: state.streams[ownProps.match.params.id]
+      }
+    }
+    
+    export default connect(mapStateToProps, { fetchStream: fetchStream })(StreamDelete);
+    ```
+
+    Recall that when our react app first loads up, `this.props.stream` can be empty since `componentDidMount` is called after `render`. In this case, if the `this.props.stream` is *null*, we want our modal to show up on the screen but the content should not me loaded until stream is fetched.
+
+    Clean up code: remove 'Delete Stream' div and the parent div of Modal.
+
+    ```jsx
+      renderContent() {
+        if (!this.props.stream) {
+          return 'Are you sure you want to delete this stream?';
+        }
+    
+        return `Are you sure you want to delete this stream with title: ${this.props.stream.title}`;
+      }
+      
+      render() {
+        return (
+          <Modal 
+            title="Delete Stream"
+            content={this.renderContent()}
+            actions={this.renderActions()}
+            onDismiss={() => { history.push('/'); }}
+          />
+        );
+      }
     ```
 
     
