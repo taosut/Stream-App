@@ -1240,5 +1240,76 @@ The general plan is to create the following structure:
    ...
    ```
 
-   
+4. Finally, let's create a div for modal. Make sure it's on top of the other two divs.
 
+   ```html
+     <!-- Outer div serves as grey background behind it. -->
+     <!-- The inner div is the white window with message and action -->
+     <div class="modal">
+       <div class="modal-body">
+         <h1>I am a modal.</h1>
+       </div>
+     </div>
+   ```
+
+5. Style the modal.
+
+   ```css
+   .modal-body {
+       background-color: white;
+       margin: auto;
+       height: 30%;
+       width: 30%;
+   }
+   
+   .modal {
+       height: 100%;
+       width: 100%;
+       position: fixed;
+       background-color: grey;
+       left: 0;
+       top: 0;
+   }
+   ```
+
+   There's a **problem**: we still see the green side bar on the left-hand side. Ideally we want the sidebar behind the modal.
+
+   **Solution**: use z-index css property.
+
+   ```css
+   .modal {
+       ...
+       z-index: 10;
+   }
+   ```
+
+6. Now, wrap the 'modal' with a new div with class name 'positioned'.
+
+   ```html
+   <div class="positioned">
+       <div class="modal">
+           <div class="modal-body">
+               <h1>I am a modal.</h1>
+           </div>
+       </div>
+   </div>
+   ```
+
+   Style it,
+
+   ```css
+   .positioned {
+       position: relative;
+       z-index: 0;
+   }
+   ```
+
+   Now, we see that the modal is behind the sidebar again. **Why is that?**
+
+   Whenever we have an element with relative position and some z-index, we've created something called *stacking context* with css. Thus, we no longer compare sidebar's z-index with the modal's z-index, but we are comparing sidebar's z-index with the root element that was the stacking context that contains the modal. (In this case, we are comparing sidebar with z-index of zero and positioned with z-index of zero.) In other words, the z-index is compared between root elements.
+
+   This is a problem for our react app, since our modal is nested all the way deep inside.
+
+   **Solution:** instead of showing modal as a child of positioned, we are going to show modal as a child of the body. This is where react-portal comes into play. Recall, inside our react-app, every component is a child of the div with id of 'root'. Using portal, we can have StreamDelete to render a modal component but don't want it to render it as a direct child. We can render it as a child of some other element, such as the body element.
+
+   In other words, we are making use of portals to get around of *context stacking* issue of css. 
