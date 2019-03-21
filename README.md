@@ -18,6 +18,7 @@ A react project for learning purpose, taught by Stephen Grider's online course.
 [Redux DevTools](#redux-devtools)<br>
 [Redux Form](#redux-form)<br>
 [RESTful Setup](#restful-setup)<br>
+[React Portals](#react-portals)<br>
 
 
 ### Initial Setup
@@ -1183,3 +1184,61 @@ The general plan is to create the following structure:
     **PROBLEM:** However, after testing out the edit submission, the two buttons are gone. After checking `Network > XHR > streams GET > Response`, the userId prop has disappeared. This happens because 'userId' is not a property of the formValues that we passed into editStream for updating.
 
     **SOLUTION**: Instead of using PUT request inside editStream, we use PATCH request. (PUT request updates all properties of a record; PATCH request updates some properties of a record.)
+
+### React Portals
+
+1. Create new file `public/modal.html`.
+
+   ```html
+   <head>
+   
+   </head>
+   <body>
+     I am a modal example
+   </body>
+   ```
+
+   We can access this file via url:
+
+   `http://localhost:3000/modal.html`
+
+2. After confirming that it works, now
+
+   ```html
+   <head>
+   
+   </head>
+   <body>
+     <div class="sidebar">I am a sidebar.</div>
+     <div class="content">
+       <h1>I am some content.</h1>
+     </div>
+   </body>
+   ```
+
+3. Now let's write some CSS to style.
+
+   ```html
+   <head>
+     <style>
+       .sidebar {
+         /* fixed position means the element will be at the same location regardless if
+             user scrolls up or down. */
+         position: fixed;
+         top: 0;
+         left: 0;
+         height: 100vh;
+         width: 300px;
+         background: green;
+       }
+   
+       .content {
+         margin-left: 300px;
+       }
+     </style>
+   </head>
+   ...
+   ```
+
+   
+
