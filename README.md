@@ -1559,7 +1559,7 @@ The general plan is to create the following structure:
 
     Recall that when our react app first loads up, `this.props.stream` can be empty since `componentDidMount` is called after `render`. In this case, if the `this.props.stream` is *null*, we want our modal to show up on the screen but the content should not me loaded until stream is fetched.
 
-    Clean up code: remove 'Delete Stream' div and the parent div of Modal.
+    *<u>Clean up code</u>*: remove 'Delete Stream' div and the parent div of Modal.
 
     ```jsx
       renderContent() {
@@ -1580,6 +1580,50 @@ The general plan is to create the following structure:
           />
         );
       }
+    ```
+
+    The last thing we want to do is to make the 'Delete' and 'Cancel' buttons work. For the Cancel button we have two options. Either we can do a programmatic navigation or a Link element back to root route. We should use Link because that's the purpose of the Link element.
+
+    ```jsx
+    import { Link } from 'react-router-dom';
+    
+    ...
+    	<Link to="/" className="ui button">Cancel</Link>
+    ...
+    ```
+
+    Now for the Delete button.
+
+    ```jsx
+    import { deleteStream } from '../../actions';
+    
+    class StreamDelete extends React.Component {
+        renderActions() {
+            const { id } = this.props.match.params;
+            
+            return (
+            	<React.Fragment>
+                	<button onClick={() => this.props.deleteStream(id)}>Delete</button>
+                </React.Fragment>
+            );
+        }
+    }
+    
+    export default connect(mapStateToProps, { deleteStream })(StreamDelete);
+    ```
+
+    To test this out, go to Network tab and check if there's a DELETE request after the Delete button is clicked. We should get an empty response back from the api server.
+
+    Just a finishing touch, when we delete a stream, we want to navigate the user back to root route. Inside `actions/index.js`
+
+    ```jsx
+    export const deleteStream = (id) => {
+        return async (dispatch) => {
+            ...
+            
+            history.push('/');
+        }
+    }
     ```
 
     

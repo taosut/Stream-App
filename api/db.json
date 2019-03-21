@@ -40,18 +40,6 @@
       "description": "edited this stream's description!!!!!!",
       "userId": "118365918835888526147",
       "id": 8
-    },
-    {
-      "title": "Stream9",
-      "description": "123123",
-      "userId": "118365918835888526147",
-      "id": 9
-    },
-    {
-      "title": "Stream10",
-      "description": "StreamCreate reuse test",
-      "userId": "118365918835888526147",
-      "id": 10
     }
   ]
 }
