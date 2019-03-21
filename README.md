@@ -1379,4 +1379,45 @@ The general plan is to create the following structure:
    ...
    ```
 
-   
+10. For reference to Modals module: `https://semantic-ui.com/modules/modal.html`
+
+    Notice that a modal has three components: header, content, and actions. Now, back inside Modal.js:
+
+    ```jsx
+    <div className="ui dimmer modals visible active">
+        <div className="ui standard modal visible active">
+            {/* Fill in modal with header, content, and actions. */}
+            <div className="header">Delete Stream</div>
+            <div className="content">Are you sure you want to delete this stream?</div>
+            <div className="actions">
+                <button className="ui button primary">Delete</button>
+                <button className="ui button">Cancel</button>
+            </div>
+        </div>
+    </div>
+    ```
+
+    **Problem**: When we click outside of the modal, the modal still stays on the screen. Ideally, we want to dismiss the window when user clicks outside of the modal window.
+
+    **Solution**: Notice user only sees the modal at route `/streams/delete`. If we navigate the user back to `/streams` the user shouldn't see the modal anymore.
+
+    ```jsx
+    import history from '../history';
+    
+    <div onClick={() => history.push('/')} className="ui dimmer modals visible active">
+        ...
+    </div>
+    ```
+
+    **Problem**: If the user clicks on the white areas inside the modal, the app still navigates the user back to root route. This is caused by *event propagation*. If we trigger some event in the child element and that child element does not handle that event, then that event is eventually going to bubble up to some parent element until it gets caught with event handler. (i.e. If we click on anything inside the modal, this click event will eventually bubble up to the root div with programmatic navigation onClick event handler.)
+
+    **Solution**: We can add a onClick event handler to the div right below the root div to stop it there.
+
+    ```jsx
+    <div onClick={() => history.push('/')} className="ui dimmer modals visible active">
+        <div onClick={(e) => e.stopPropagation()} className="ui standard modal visible active">
+            ...
+    </div>
+    ```
+
+    
