@@ -1749,4 +1749,115 @@ The general plan is to create the following structure:
 
    `npm start`
 
-   By default, our streaming server should be running on port 8000.
+   By default, our streaming server should be running on port 8000. (The RTMP server makes streams available for consumption in the viewer's browser available at port 8000. This server is also accepting traffic at port 1935, that's where we are going to send incoming video streams to; when someone is streaming video from our server they are going to be sending it to port 1935 on the RTMP server. Then that server is going to make a video available on port 8000 for consumption.)
+
+6. Install OBS `obsproject.com`. After installation, launch it.
+
+7. Create a new scene called 'Streaming Scene'.
+
+8. Add a new source > Display Capture.
+
+9. Add a new source > Auto Input Capture.
+
+   To find out where the output file is stored, go to Settings > Output > Recording Path.
+
+10. Let's now implement the video player in the StreamShow page. In the documentation, look for the section "Accessing the live stream". Ideally, HLS and DASH should be used for streaming videos, but for simplicity we will choose http-flv. (Flash Video format) In the documentation, the code written in plain html and javascript. We need to take the code and write it in react.
+
+11. The documentation for flv-js `npmjs.com/package/flv.js`.
+
+    Inside the 'client' directory, install this library.
+
+    `npm install --save flv.js`
+
+12. Inside StreamShow.js, we want to make use of the flv.js component as shown in the two documentation sample codes.
+
+    ```jsx
+    import flv from 'flv.js';
+    
+    class StreamShow extends React.Component {
+      constructor(props) {
+        super(props);
+        this.videoRef = React.createRef();
+      }
+        
+      render() {
+        <div>
+          <video  ref={this.videoRef} style={{ width: '100%' }} controls={true} />  
+        </div>      
+      }
+    }
+    ```
+
+13. Now let's setup flv.
+
+    ```jsx
+    componentDidMount() {
+      const { id } = this.props.match.params;
+      
+      this.props.fetchStream(id);
+        
+      this.flvPlayer = flv.createPlayer({
+        type: 'flv',
+        url: `http://localhost:8000/live/${id}.flv`
+      });
+        
+      this.flvPlayer.attachMediaElement(this.videoRef.current);
+      this.flvPlayer.load();
+    }
+    ```
+
+    **Problem:** Something went wrong when we tried to call attachMediaElement() as pointed out in the error message.
+
+    **Debugging:** After console.log(this.videoRef), it returned `{ current: null }`.  This means we are not getting the correct referene to the video element. If we look back at `render()`, if `this.props.stream` is empty, then there is essentially no video element. (Hence, we never attached ref prop to anything in this case. But if we first go back to StreamList then click on one of the stream titles, then we will have our player rendered correctly.)
+
+    **Solution 1:** Since our video player does not depend on `this.props.stream` we can always render it even if `this.props.stream` is null.
+
+    **Solution 2 (Better Solution):**  Do not setup player until we have successfully render the stream.
+
+    ```jsx
+      componentDidMount() {
+        const { id } = this.props.match.params;
+    
+        this.props.fetchStream(id);
+    
+        this.buildPlayer();
+      }
+    
+      componentDidUpdate() {
+        this.buildPlayer();
+      }
+    
+      buildPlayer() {
+        const { id } = this.props.match.params;
+          
+        if (this.flvPlayer || !this.props.stream) {
+          return;
+        }
+    
+        this.flvPlayer = flv.createPlayer({
+          type: 'flv',
+          url: `http://localhost:8000/live/${id}.flv`
+        });
+    
+        // this.videoRef.current is the referencing <video />
+        this.flvPlayer.attachMediaElement(this.videoRef.current);
+        this.flvPlayer.load();
+      }
+    ```
+
+14. Reference section 'From OBS' from the Node Media Player documentation. In OBS, `Settings > Stream` configure `Service: custom, Server: rtmp://localhost/live, and Stream Key: STREAM_ID_FROM_URL_PARAMS`.
+
+    To test this, in OBS start streaming, then go back to browser and refresh. We should see our screen captured  and streamed in the player.
+
+    **Problem**: In chrome console, we see the message `[MSEController] > MediaSource onSourceOpen` after we stop streaming and next time we come back. This happens because we have no code to tell the flvPlayer to stop streaming video from our video server.
+
+    **Solution:** Use componentWillUnmount() lifecycle method.
+
+    ```jsx
+    componentWillUnmount() {
+        // Tells flvPlayer to stop streaming and detach.
+        this.flvPlayer.destroy();
+    }
+    ```
+
+    
