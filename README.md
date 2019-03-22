@@ -19,6 +19,7 @@ A react project for learning purpose, taught by Stephen Grider's online course.
 [Redux Form](#redux-form)<br>
 [RESTful Setup](#restful-setup)<br>
 [React Portals](#react-portals)<br>
+[Implement Streams](#implement-streams)<br>
 
 
 ### Initial Setup
@@ -1626,4 +1627,18 @@ The general plan is to create the following structure:
     }
     ```
 
-    
+### Implement Streams
+
+1. Refactor the SHOW route in App.js:
+
+   ```jsx
+   <Route path="/streams/:id" exact component={StreamShow} />
+   ```
+
+2. On StreamList, any time we click on the header, we want to navigate the user to StreamShow. Inside the StreamShow, we want to wrap the title in Link tags. As well as adding in a className 'header'.
+
+   ```jsx
+   <Link to={`/streams/${stream.id}`} className="header">{stream.title}</Link>
+   ```
+
+   
