@@ -1700,10 +1700,53 @@ The general plan is to create the following structure:
    export default connect(mapStateToProps, { fetchStream })(StreamShow);
    ```
 
-   
+4. We are going to setup the Real Time Messaging Protocol (RTMP). Make a new folder called 'rtmpserver'  in the same directory as 'api' and 'client'.
 
-   ```jsx
+   `mkdir rtmpsever`
+
+   Inside this new folder, generate a new package.json file.
+
+   `cd rtmpserver`
+
+   `npm init`
+
+5. Documentation for the RTMP Server: `github.com/illuspas/Node-Media-Server`. Following the instructions for 'Singlecore Mode':
+
+   `npm install --save node-media-server`
+
+   Inside the `rtmpserver` folder, create a new file called `index.js`. Copy and paste the example from the documentation, into this file.
+
+   ```javascript
+   const { NodeMediaServer } = require('node-media-server');
    
+   const config = {
+     rtmp: {
+       port: 1935,
+       chunk_size: 60000,
+       gop_cache: true,
+       ping: 60,
+       ping_timeout: 30
+     },
+     http: {
+       port: 8000,
+       allow_origin: '*'
+     }
+   };
+   
+   var nms = new NodeMediaServer(config)
+   nms.run();
    ```
 
-   
+   Now, in `package.json` file, add in a new script to start up our project.
+
+   ```json
+   "scripts": {
+       "start": "node index.js"
+   }
+   ```
+
+   In terminal, inside this folder run
+
+   `npm start`
+
+   By default, our streaming server should be running on port 8000.
