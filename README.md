@@ -1641,4 +1641,22 @@ The general plan is to create the following structure:
    <Link to={`/streams/${stream.id}`} className="header">{stream.title}</Link>
    ```
 
+   **Problem: ** When user clicks on 'Create Stream', we see the text 'Stream Show' at the bottom of the form. This happens because the url `http://localhost:3000/streams/new` matches the path `/streams/new` as well as `/streams/:id`.
+
+   **Solution:** Import another helper component from 'react-router-dom', Switch. This component tells react router to look at all the routes, and it's only going to show one of these given routes for any path that we go to. The first route that gets matched by a given path is going to be shown. Here is how we refactor App.js:
+
+   ```jsx
+   import { Switch } from 'react-router-dom';
+   
+   ...
+   <Switch>
+       <Route path="/" exact component={StreamList} />
+       <Route path="/streams/new" exact component={StreamCreate} />
+       <Route path="/streams/edit/:id" exact component={StreamEdit} />
+       <Route path="/streams/delete/:id" exact component={StreamDelete} />
+       <Route path="/streams/:id" exact component={StreamShow} />
+   </Switch>
+   ...
+   ```
+
    
